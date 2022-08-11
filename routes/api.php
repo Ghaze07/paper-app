@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\SubjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
         Route::group(['middleware' => ['auth:sanctum']], function () {
             
+            Route::group(['middleware' => 'admin'], function() {
+
+                Route::post('create-subjects', [SubjectController::class, 'storeSubjects']);
+                
+            });
+
         });
     });
 });
