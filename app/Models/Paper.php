@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Paper extends Model
 {
@@ -19,6 +20,30 @@ class Paper extends Model
         return $this->belongsTo(Subject::class);
     }
 
+    public function setQuestionFileNameAttribute($value)
+    {
+        $this->attributes['question_file_name'] = str_replace(' ', '_', $value);
+    }
+
+    public function setQuestionFilePathAttribute($value)
+    {
+        $this->attributes['question_file_path'] = str_replace(' ', '_', $value);
+    }
+
+    public function setAnswerFileNameAttribute($value)
+    {
+        if ($this->answer_type == self::ANSWER_TYPE_FILE) {
+            $this->attributes['answer_file_name'] = str_replace(' ', '_', $value);
+        }
+    }
+
+    public function setAnswerFilePathAttribute($value)
+    {
+        if ($this->answer_type == self::ANSWER_TYPE_FILE) {
+            $this->attributes['answer_file_path'] = str_replace(' ', '_', $value);
+        }
+    }
+
     public function getQuestionFilePathAttribute($value)
     {
         return asset('storage/' . $value);
@@ -31,6 +56,29 @@ class Paper extends Model
         }
 
         return null;
+    }
+
+    public function deleteExistingQuestionPaper()
+    {
+        $path = storage_path('app/public/papers/'.$this->attributes['question_file_name']) ;
+        if (is_file($path)) {
+            unlink($path);
+        }
+
+        return true;
+    }
+
+    public function deleteExistingAnswerPaper()
+    {
+        if ($this->answer_type == self::ANSWER_TYPE_FILE) {
+            $path = storage_path('app/public/papers/'.$this->attributes['answer_file_name']);
+
+            if (is_file($path)) {
+                unlink($path);
+            }
+        }
+
+        return true;
     }
     
 }

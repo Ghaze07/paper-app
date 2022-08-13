@@ -39,6 +39,30 @@ class PaperController extends Controller
 
     public function update(UpdatePaperRequest $request)
     {
-        # code...
+        $paper = $this->paperRepository->findPaperById($request->paper_id);
+        
+        if ($paper instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'success' => false,
+                'message' => 'Paper not found',
+            ]);
+        }
+
+        $paper = $this->paperRepository->updatePaper($paper, $request);
+
+        if ($paper instanceof \Exception) {
+            return response()->json([
+                'status' => Response::HTTP_BAD_REQUEST,
+                'success' => false,
+                'message' => $paper->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'success' => true,
+            'message' => 'Paper updated successfully'
+        ], Response::HTTP_OK);
     }
 }
