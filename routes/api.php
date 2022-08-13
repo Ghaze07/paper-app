@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\PaperController;
 use App\Http\Controllers\Api\V1\SubjectController;
 
 /*
@@ -33,13 +33,20 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
             
             Route::group(['middleware' => 'admin'], function() {
 
-                Route::post('create-subjects', [SubjectController::class, 'storeSubjects']);
-                
+                Route::post('create-subjects', [SubjectController::class, 'store']);
+                Route::post('update-subject/{subject}', [SubjectController::class, 'update']);
+                Route::post('subject-paper', [PaperController::class, 'store']);
+                Route::post('update-subject-paper', [PaperController::class, 'update']);                
             });
 
         });
+
+        Route::get('subjects', [SubjectController::class, 'index']);
     });
 });
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
+Route::fallback(function () {
+    return response()->json([
+        'message' => 'Page Not Found.'
+    ], 404);
+});

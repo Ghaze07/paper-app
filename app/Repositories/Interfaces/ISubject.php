@@ -8,6 +8,6 @@ interface ISubject
     public function getById($id);
     public function createSubject($data);
     public function createSubjects($subjectsArray);
-    public function updateSubject($id, $data);
+    public function updateSubject($subject, $data);
     public function deleteSubject($id);
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Subject;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
 use App\Repositories\Interfaces\ISubject;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\Api\Subject\UpdateSubjectRequest;
 use App\Http\Requests\Api\Subject\CreateSubjectsRequest;
+use App\Http\Resources\SubjectResource;
 
 class SubjectController extends Controller
 {
@@ -17,7 +19,18 @@ class SubjectController extends Controller
         $this->subjectRepository = $subjectRepository;
     }
 
-    public function storeSubjects(CreateSubjectsRequest $request)
+    public function index()
+    {
+        $subjects = $this->subjectRepository->getAllSubjects();
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'success' => true,
+            'subjects' => SubjectResource::collection($subjects),
+        ]);
+    }
+
+    public function store(CreateSubjectsRequest $request)
     {
         $subjects = $this->subjectRepository->createSubjects($request->subjects);
 
@@ -35,5 +48,21 @@ class SubjectController extends Controller
             'success' => true,
             'message' => 'Subjects created successfully'
         ], Response::HTTP_CREATED);
+    }
+
+    public function update(UpdateSubjectRequest $request, Subject $subject)
+    {
+        $subject = $this->subjectRepository->updateSubject($subject, $request->validated());
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'success' => true,
+            'message' => 'Subject updated successfully'
+        ], Response::HTTP_OK);
+    }
+
+    public function delete(Subject $subject)
+    {
+        
     }
 }

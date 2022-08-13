@@ -11,7 +11,8 @@ class SubjectRepository implements ISubject
     
     public function getAllSubjects()
     {
-        # code...
+        return Subject::with(['papers' => fn($query) => $query->orderBy('date', 'DESC')])
+                        ->latest()->get();
     }
 
     public function getById($id)
@@ -49,9 +50,11 @@ class SubjectRepository implements ISubject
         # code...
     }
 
-    public function updateSubject($id, $data)
+    public function updateSubject($subject, $data)
     {
-        # code...
+        $subject = $subject->update($data);
+
+        return $subject;
     }
 
     public function deleteSubject($id)

@@ -24,4 +24,9 @@ class Subject extends Model
             $subject->slug = Str::of($subject->title)->slug('-');
         });
     }
+
+    public function papers()
+    {
+        return $this->hasMany(Paper::class);
+    }
 }
