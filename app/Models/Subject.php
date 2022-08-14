@@ -15,7 +15,7 @@ class Subject extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($subject) {
             $subject->slug = Str::of($subject->title)->slug('-');
         });
@@ -28,5 +28,10 @@ class Subject extends Model
     public function papers()
     {
         return $this->hasMany(Paper::class);
+    }
+
+    public function testimonials()
+    {
+        return $this->hasMany(Testimonial::class);
     }
 }

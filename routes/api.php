@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\PaperController;
 use App\Http\Controllers\Api\V1\SubjectController;
+use App\Http\Controllers\Api\V1\TestimonialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,18 +31,22 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         });
 
         Route::group(['middleware' => ['auth:sanctum']], function () {
-            
-            Route::group(['middleware' => 'admin'], function() {
+
+            Route::group(['middleware' => 'admin'], function () {
 
                 Route::post('create-subjects', [SubjectController::class, 'store']);
                 Route::post('update-subject/{subject}', [SubjectController::class, 'update']);
                 Route::post('subject-paper', [PaperController::class, 'store']);
-                Route::post('update-subject-paper', [PaperController::class, 'update']);                
-            });
+                Route::post('update-subject-paper', [PaperController::class, 'update']);
 
+                Route::post('create-testimonials', [TestimonialController::class, 'store']);
+                Route::post('update-testimonial/{testimonial}', [TestimonialController::class, 'update']);
+                Route::delete('delete-testimonial/{testimonial}', [TestimonialController::class, 'delete']);
+            });
         });
 
         Route::get('subjects', [SubjectController::class, 'index']);
+        Route::get('subject-testimonials/{subject}', [SubjectController::class, 'getSubjectTestimonials']);
     });
 });
 

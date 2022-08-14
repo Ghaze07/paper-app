@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Api\Subject\UpdateSubjectRequest;
 use App\Http\Requests\Api\Subject\CreateSubjectsRequest;
 use App\Http\Resources\SubjectResource;
+use App\Http\Resources\SubjectTestimonialResource;
 
 class SubjectController extends Controller
 {
@@ -30,17 +31,28 @@ class SubjectController extends Controller
         ]);
     }
 
+    public function getSubjectTestimonials(Subject $subject)
+    {
+        $subjectWithTestimonials = $this->subjectRepository->getSubjectTestimonials($subject);
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'success' => true,
+            'subject' => new SubjectTestimonialResource($subjectWithTestimonials),
+        ]);
+    }
+
     public function store(CreateSubjectsRequest $request)
     {
         $subjects = $this->subjectRepository->createSubjects($request->subjects);
 
-        if($subjects instanceof \Exception) {
+        if ($subjects instanceof \Exception) {
 
             return response()->json([
                 'status' => Response::HTTP_BAD_REQUEST,
+                'success' => false,
                 'message' => $subjects->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
-            
         }
 
         return response()->json([
@@ -63,6 +75,5 @@ class SubjectController extends Controller
 
     public function delete(Subject $subject)
     {
-        
     }
 }

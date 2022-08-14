@@ -7,6 +7,8 @@ use App\Repositories\Interfaces\IPaper;
 use App\Repositories\SubjectRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Interfaces\ISubject;
+use App\Repositories\TestimonialRepository;
+use App\Repositories\Interfaces\ITestimonial;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         //repository mapping
         $this->app->bind(ISubject::class, SubjectRepository::class);
         $this->app->bind(IPaper::class, PaperRepository::class);
+        $this->app->bind(ITestimonial::class, TestimonialRepository::class);
     }
 
     /**
