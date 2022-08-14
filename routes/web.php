@@ -21,4 +21,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+
+Route::fallback(function () {
+    return response()->json([
+        'message' => 'Page Not Found.'
+    ], 404);
+});
+
 require __DIR__.'/auth.php';
