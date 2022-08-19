@@ -31,6 +31,14 @@ class SubjectRepository implements ISubject
         return $subjectWithTestimonials;
     }
 
+    public function getAllSubjectsCourses()
+    {
+        return Subject::with([
+            'courses' => fn ($query) => $query->with(
+                ['lectures' => fn ($query) => $query->orderBy('date', 'DESC')])
+            ])->latest()->get();
+    }
+
     public function createSubjects($subjectsArray)
     {
         DB::beginTransaction();

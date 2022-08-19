@@ -55,6 +55,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subject-testimonials/{subject}', [SubjectController::class, 'getSubjectTestimonials']);
+        Route::get('subjects-courses', [SubjectController::class, 'getAllSubjectsCourses']);
     });
 });
 

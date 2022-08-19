@@ -41,5 +41,19 @@ class LectureController extends Controller
 
     public function update(UpdateLectureRequest $request, Lecture $lecture)
     {
+        $lecture = $this->lectureRepository->update($lecture, $request->validated());
+        
+        if ($lecture instanceof \Exception) {
+            return response()->json([
+                'status' => Response::HTTP_BAD_REQUEST,
+                'success' => false,
+                'message' => $lecture->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'success' => true,
+            'message' => 'Lecture updated successfully'
+        ], Response::HTTP_OK);
     }
 }

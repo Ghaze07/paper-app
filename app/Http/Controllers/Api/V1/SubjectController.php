@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Subject;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SubjectResource;
 use App\Repositories\Interfaces\ISubject;
+use App\Http\Resources\SubjectCourseResource;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Resources\SubjectTestimonialResource;
 use App\Http\Requests\Api\Subject\UpdateSubjectRequest;
 use App\Http\Requests\Api\Subject\CreateSubjectsRequest;
-use App\Http\Resources\SubjectResource;
-use App\Http\Resources\SubjectTestimonialResource;
 
 class SubjectController extends Controller
 {
@@ -39,6 +40,16 @@ class SubjectController extends Controller
             'status' => Response::HTTP_OK,
             'success' => true,
             'subject' => new SubjectTestimonialResource($subjectWithTestimonials),
+        ]);
+    }
+
+    public function getAllSubjectsCourses()
+    {
+        $subjectWithCourses = $this->subjectRepository->getAllSubjectsCourses();
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'success' => true,
+            'subject' => SubjectCourseResource::collection($subjectWithCourses),
         ]);
     }
 

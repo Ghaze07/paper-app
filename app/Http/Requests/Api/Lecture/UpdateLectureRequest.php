@@ -27,9 +27,9 @@ class UpdateLectureRequest extends FormRequest
             'course_id' => 'required|integer|exists:courses,id',
             'title' => 'sometimes|string|max:255',
             'date' => 'sometimes|date_format:Y-m-d',
-            'type' => 'required|string|in:link,file,other',
-            'video_url' => 'sometimes|required_if:type,link|string|max:255',
-            'file' => 'sometimes|required_if:type,file|file|mimes:pdf,doc,docx,ppt,pptx|max:2048',
+            'type' => 'required|string|in:link,file,none',
+            'video_url' => 'required_if:type,link|string|max:255',
+            'file' => 'required_if:type,file|file|mimes:pdf,doc,docx,ppt,pptx|max:2048',
         ];
     }
 
@@ -45,7 +45,7 @@ class UpdateLectureRequest extends FormRequest
             'date.date' => 'Date must be a valid date',
             'type.required' => 'Type is required',
             'type.string' => 'Type must be a string',
-            'type.in' => 'Type must be either video or file or other',
+            'type.in' => 'Type must be either video or file or none',
             'video_url.required_if' => 'Video url is required if type is link',
             'video_url.string' => 'Video url must be a string',
             'video_url.max' => 'Video url must be less than 255 characters',
