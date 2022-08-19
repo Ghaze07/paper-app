@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\PaperController;
+use App\Http\Controllers\Api\V1\CourseController;
+use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\SubjectController;
 use App\Http\Controllers\Api\V1\TestimonialController;
 
@@ -42,11 +44,18 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                 Route::post('create-testimonials', [TestimonialController::class, 'store']);
                 Route::post('update-testimonial/{testimonial}', [TestimonialController::class, 'update']);
                 Route::delete('delete-testimonial/{testimonial}', [TestimonialController::class, 'delete']);
+
+                Route::post('create-course/{subject}', [CourseController::class, 'store']);
+                Route::post('update-course/{course}', [CourseController::class, 'update']);
+
+                Route::post('create-course-lecture/{course}', [LectureController::class, 'store']);
+                Route::post('update-course-lecture/{lecture}', [LectureController::class, 'update']);
             });
         });
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subject-testimonials/{subject}', [SubjectController::class, 'getSubjectTestimonials']);
+        Route::get('subjects-courses', [SubjectController::class, 'getAllSubjectsCourses']);
     });
 });
 

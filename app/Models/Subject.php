@@ -34,4 +34,9 @@ class Subject extends Model
     {
         return $this->hasMany(Testimonial::class);
     }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
 }
