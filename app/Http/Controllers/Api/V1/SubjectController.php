@@ -21,9 +21,13 @@ class SubjectController extends Controller
         $this->subjectRepository = $subjectRepository;
     }
 
-    public function index()
+    public function index($subject_id = null)
     {
-        $subjects = $this->subjectRepository->getAllSubjects();
+        if ($subject_id) {
+            $subjects = $this->subjectRepository->getById($subject_id);
+        }else {
+            $subjects = $this->subjectRepository->getAllSubjects();
+        }
 
         return response()->json([
             'status' => Response::HTTP_OK,
