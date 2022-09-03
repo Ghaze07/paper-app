@@ -17,7 +17,8 @@ class SubjectRepository implements ISubject
 
     public function getById($id)
     {
-        # code...
+        return Subject::where('id', $id)->with(['papers' => fn ($query) => $query->orderBy('date', 'DESC')])
+                        ->get();
     }
 
     public function getSubjectTestimonials($subject)
