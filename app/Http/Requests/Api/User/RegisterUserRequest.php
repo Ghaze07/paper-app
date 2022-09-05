@@ -26,7 +26,7 @@ class RegisterUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'phone' => 'required|int|digits:10|unique:users,phone',
+            'phone' => 'required|int|unique:users,phone',
             'password' => 'required|string|min:6',
         ];
     }
@@ -40,10 +40,18 @@ class RegisterUserRequest extends FormRequest
             'email.unique' => 'Email is already taken',
             'phone.required' => 'Phone is required',
             'phone.int' => 'Phone is invalid',
-            'phone.digits' => 'Phone must be 10 digits',
             'phone.unique' => 'Phone is already taken',
             'password.required' => 'Password is required',
             'password.min' => 'Password must be at least 6 characters',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        if ($this->has('phone')) {
+            $this->merge([
+                'phone' => ltrim($this->phone, '0')
+            ]);
+        }
     }
 }
