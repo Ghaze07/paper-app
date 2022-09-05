@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_USER;
     }
+
+    public function admission()
+    {
+        return $this->hasOne(Admission::class);
+    }
 }

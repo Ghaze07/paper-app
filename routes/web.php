@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/optimize', function () {
+    Artisan::call('optimize');
+    Artisan::call('inspire');
+
+    return response()->json([
+        'optimized' => Artisan::output()
+    ]);
 });
 
 Route::get('/dashboard', function () {
