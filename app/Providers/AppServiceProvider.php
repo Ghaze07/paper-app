@@ -10,9 +10,11 @@ use App\Repositories\LectureRepository;
 use App\Repositories\SubjectRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Interfaces\ICourse;
+use App\Repositories\AdmissionRepository;
 use App\Repositories\Interfaces\IArticle;
 use App\Repositories\Interfaces\ILecture;
 use App\Repositories\Interfaces\ISubject;
+use App\Repositories\Interfaces\IAdmission;
 use App\Repositories\TestimonialRepository;
 use App\Repositories\Interfaces\ITestimonial;
 
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ICourse::class, CourseRepository::class);
         $this->app->bind(ILecture::class, LectureRepository::class);
         $this->app->bind(IArticle::class, ArticleRepository::class);
+        $this->app->bind(IAdmission::class, AdmissionRepository::class);
     }
 
     /**

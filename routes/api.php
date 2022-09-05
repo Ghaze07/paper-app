@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V1\ArticleController;
 use App\Http\Controllers\Api\V1\LectureController;
 use App\Http\Controllers\Api\V1\SubjectController;
+use App\Http\Controllers\Api\V1\AdmissionController;
 use App\Http\Controllers\Api\V1\TestimonialController;
 
 /*
@@ -56,6 +57,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
                 Route::resource('articles', ArticleController::class);
             });
+
+            Route::post('admission', [AdmissionController::class, 'store']);
         });
 
         Route::get('subjects/{subject_id?}', [SubjectController::class, 'index']);
