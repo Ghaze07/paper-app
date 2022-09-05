@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Api\User\RegisterUserRequest;
 
@@ -93,5 +94,25 @@ class AuthController extends Controller
             'status' => Response::HTTP_OK,
             'message' => 'Successfully logged out',
         ], Response::HTTP_OK);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email'],
+        ]);
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        $status == Password::RESET_LINK_SENT;
+        
+        return response()->json([
+            'status' => $status,
+            ], Response::HTTP_OK);
     }
 }

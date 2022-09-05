@@ -27,6 +27,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('logout', [AuthController::class, 'logout']);
 
+        Route::post('forget-password', [AuthController::class, 'forgotPassword']);
+
         Route::get('/', function () {
             return response()->json([
                 'message' => 'Welcome to the API'
