@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Paper;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Interfaces\IPaper;
+use Illuminate\Support\Facades\Storage;
 
 class PaperRepository implements IPaper
 {
@@ -17,20 +18,19 @@ class PaperRepository implements IPaper
             if ($request->hasFile('question_paper')) {
                 
                 $questionPaper = time().'_question_paper_'.$request->file('question_paper')
-                                                                    ->getClientOriginalName();
+                                            ->getClientOriginalName();
                 
-                $questionFilePath = $request->file('question_paper')
-                                                ->storeAs('papers', str_replace(' ', '_', $questionPaper), 'public');
+                $this->uploadFile($questionPaper, $request->file('question_paper'));
+                $questionPaperPath = 'papers/'.$questionPaper;
             }
 
             if ($request->answer_type == Paper::ANSWER_TYPE_FILE && $request->hasFile('answer_paper')) {
-                $answerPaper = time().'_answer_paper_'.$request->file('answer_paper')
-                                                                    ->getClientOriginalName();
-                
-                $answerFilePath = $request->file('answer_paper')
-                                                ->storeAs('papers', str_replace(' ', '_', $answerPaper), 'public');
-                
+                $answerPaper = str_replace(' ', '_', time().'_answer_paper_'.$request->file('answer_paper')
+                                                                    ->getClientOriginalName());
+
+                $this->uploadFile($answerPaper, $request->file('answer_paper'));
                 $answerText = null;
+                $answerFilePath = 'papers/'.$answerPaper;
             }
 
             if ($request->answer_type == Paper::ANSWER_TYPE_TEXT) {
@@ -42,7 +42,7 @@ class PaperRepository implements IPaper
             Paper::create([
                 'subject_id' => $request->subject_id,
                 'question_file_name' => $questionPaper,
-                'question_file_path' => $questionFilePath,
+                'question_file_path' => $questionPaperPath,
                 'answer_type' => $request->answer_type,
                 'answer_text' => $answerText,
                 'answer_file_name' => $answerPaper,
@@ -55,7 +55,6 @@ class PaperRepository implements IPaper
             return true;
 
         } catch (\Exception $ex) {
-            
             DB::rollBack();
             return $ex;
         }
@@ -71,18 +70,15 @@ class PaperRepository implements IPaper
     {
         DB::beginTransaction();
         try {
-            
             if ($request->has('question_paper') && $request->hasFile('question_paper')) {
                 $paper->deleteExistingQuestionPaper();
     
                 $questionPaper = time().'_question_paper_'.$request->file('question_paper')
                                                                         ->getClientOriginalName();
-                    
-                $questionFilePath = $request->file('question_paper')
-                                            ->storeAs('papers', $questionPaper, 'public');
-                
+
+                $this->uploadFile($questionPaper, $request->file('question_paper'));
                 $paper->question_file_name = $questionPaper;
-                $paper->question_file_path = $questionFilePath;
+                $paper->question_file_path = 'papers/'.$questionPaper;
             }
 
             if ($request->answer_type == Paper::ANSWER_TYPE_FILE && $request->has('answer_paper') && $request->hasFile('answer_paper')) {
@@ -90,12 +86,10 @@ class PaperRepository implements IPaper
     
                 $answerPaper = time().'_answer_paper_'.$request->file('answer_paper')
                                                                 ->getClientOriginalName();
-                    
-                $answerFilePath = $request->file('answer_paper')
-                                            ->storeAs('papers', $answerPaper, 'public');
-    
+                
+                $this->uploadFile($answerPaper, $request->file('answer_paper'));
                 $paper->answer_file_name = $answerPaper;
-                $paper->answer_file_path = $answerFilePath;
+                $paper->answer_file_path = 'papers/'.$answerPaper;
             }
     
             if ($request->answer_type == Paper::ANSWER_TYPE_TEXT && $request->has('answer_text')) {
@@ -116,8 +110,12 @@ class PaperRepository implements IPaper
             DB::rollBack();
             return $ex;
         }
-        
+    }
 
-        
+    private function uploadFile($path, $file)
+    {
+        Storage::disk('papers')->put(str_replace(' ', '_', $path), file_get_contents($file));
+
+        return;
     }
 }
