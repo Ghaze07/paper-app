@@ -27,7 +27,7 @@ class Article extends Model
     public function getHeaderImageAttribute($value)
     {
         if ($value) {
-            return asset('storage/' . $value);
+            return asset('public/uploads/' . $value);
         }
     }
 }

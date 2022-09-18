@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Article;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Repositories\Interfaces\IArticle;
 
 class ArticleRepository implements IArticle
@@ -46,15 +47,15 @@ class ArticleRepository implements IArticle
             if ($article) {
                 if (isset($data['header_image'])) {
                     $headerImageTitle = $this->getImageTitle($data['header_image']);
-                    $headerImagePath = $data['header_image']->storeAs('articles/'.$article->id, str_replace(' ', '_', $headerImageTitle), 'public');
 
+                    Storage::disk('articles')->put(str_replace(' ', '_', $headerImageTitle), file_get_contents($data['header_image']));
                     $article->update([
-                        'header_image' => $headerImagePath,
+                        'header_image' => 'articles/'.$headerImageTitle,
                     ]);
                 }
 
                 if (isset($data['media'])) {
-                    $allowedfileExtension=['pdf','jpg','jpeg','png'];
+                    $allowedfileExtension=['pdf','jpg','jpeg','png', 'PNG'];
                     
                     foreach ($data['media'] as $key => $media) {
                         $fileExtension = $media->getClientOriginalExtension();
@@ -84,11 +85,10 @@ class ArticleRepository implements IArticle
     {
         try {
             $mediaTitle = $this->getImageTitle($media);
-            $mediaPath = $media->storeAs('articles/'.$article->id.'/media', str_replace(' ', '_', $mediaTitle), 'public');
-
+            Storage::disk('articles')->put(str_replace(' ', '_', $mediaTitle), file_get_contents($media));
             $article->media()->create([
                 'file_name' => $mediaTitle,
-                'file_path' => $mediaPath
+                'file_path' => 'articles/'.$mediaTitle
             ]);
 
             return true;

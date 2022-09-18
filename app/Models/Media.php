@@ -34,7 +34,7 @@ class Media extends Model
     public function getFilePathAttribute($value)
     {
         if ($value) {
-            return asset('storage/' . $value);
+            return asset('public/uploads/' . $value);
         }
     }
 }
