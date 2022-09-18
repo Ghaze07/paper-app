@@ -46,13 +46,13 @@ class Paper extends Model
 
     public function getQuestionFilePathAttribute($value)
     {
-        return asset('storage/' . $value);
+        return asset('public/uploads/' . $value);
     }
 
     public function getAnswerFilePathAttribute($value)
     {
         if ($this->answer_type == self::ANSWER_TYPE_FILE) {
-            return asset('storage/' . $value);
+            return asset('public/uploads/' . $value);
         }
 
         return null;
