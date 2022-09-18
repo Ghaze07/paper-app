@@ -47,6 +47,16 @@ return [
             'root'   => public_path() . '/uploads/papers',
         ],
 
+        'lectures' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/uploads/lectures',
+        ],
+
+        'articles' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/uploads/articles',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

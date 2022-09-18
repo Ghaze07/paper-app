@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Course;
 use App\Models\Lecture;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Repositories\Interfaces\ILecture;
 
 class LectureRepository implements ILecture
@@ -92,8 +93,8 @@ class LectureRepository implements ILecture
         try {
             $this->fileTitle = time() . '_' . $lectureTitle . $lectureFile->getClientOriginalName();
 
-            $this->filePath = $lectureFile->storeAs('lectures', str_replace(' ', '_', $this->fileTitle), 'public');
-
+            $this->filePath = 'lectures/'.$this->fileTitle;
+            Storage::disk('lectures')->put(str_replace(' ', '_', $this->fileTitle), file_get_contents($lectureFile));
             return true;
         } catch (\Exception $ex) {
             return $ex;
